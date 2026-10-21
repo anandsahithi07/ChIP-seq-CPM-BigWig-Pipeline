@@ -6,13 +6,13 @@ import subprocess
 import multiprocessing
 
 def run_cmd(cmd, description):
-    print(f"\n🚀 [RUNNING] {description}")
+    print(f"\n [RUNNING] {description}")
     print(f"Command: {cmd}")
     try:
         subprocess.run(cmd, shell=True, check=True)
-        print(f"✅ [SUCCESS] {description} finished.")
+        print(f" [SUCCESS] {description} finished.")
     except subprocess.CalledProcessError as e:
-        print(f"❌ [ERROR] Command failed during: {description}")
+        print(f" [ERROR] Command failed during: {description}")
         sys.exit(1)
 
 def find_fastq_files(directory, sample_id):
@@ -72,7 +72,7 @@ def main():
         r1_path, r2_path = find_fastq_files(RAW_DATA_DIR, sample_id)
         
         if not r1_path or not r2_path:
-            print(f"⚠️ [SKIP] Could not resolve unique file paths for sample ID: '{sample_id}' inside target directory.")
+            print(f" [SKIP] Could not resolve unique file paths for sample ID: '{sample_id}' inside target directory.")
             continue
             
         print(f"Resolved R1 file: {os.path.basename(r1_path)}")
@@ -133,7 +133,7 @@ def main():
             os.rename(macs_bed, final_bed)
             
         # 10. Direct Transfer to Windows Host Downloads Directory (Syncs BAMs, indices, BigWigs, and BED files)
-        print(f"🚀 Exporting analytical packages to Windows Host Space for {sample_id}...")
+        print(f"Exporting analytical packages to Windows Host Space for {sample_id}...")
         run_cmd(f"cp \"{bam_dedup}\" \"{WINDOWS_DOWNLOADS}/\"", f"[{sample_id}] Syncing BAM track")
         run_cmd(f"cp \"{bam_dedup}.bai\" \"{WINDOWS_DOWNLOADS}/\"", f"[{sample_id}] Syncing BAM index track")
         run_cmd(f"cp \"{bigwig_output}\" \"{WINDOWS_DOWNLOADS}/\"", f"[{sample_id}] Syncing BigWig track")
@@ -141,15 +141,15 @@ def main():
             run_cmd(f"cp \"{final_bed}\" \"{WINDOWS_DOWNLOADS}/\"", f"[{sample_id}] Syncing BED peak file")
             
         # 11. Intermediate Cache Flush Loop
-        print(f"🧹 Flushing heavy processing data cache for sample: {sample_id}...")
+        print(f" Flushing heavy processing data cache for sample: {sample_id}...")
         files_to_clean = [sam_output, bam_raw, bam_fixmate, bam_sorted, trimmed_r1, trimmed_r2]
         for file_path in files_to_clean:
             if os.path.exists(file_path):
                 os.remove(file_path)
                 
-        print(f"✨ Target profile processing for {sample_id} completed successfully.")
+        print(f"Target profile processing for {sample_id} completed successfully.")
         
-    print("\n🎉 [BATCH PIPELINE COMPLETE] Your de-duplicated BAM files, BigWig tracks, and peak BED files are ready inside your Windows Downloads folder!")
+    print("\n [BATCH PIPELINE COMPLETE] Your de-duplicated BAM files, BigWig tracks, and peak BED files are ready inside your Windows Downloads folder!")
 
 if __name__ == "__main__":
     main()
