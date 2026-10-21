@@ -4,7 +4,7 @@ import sys
 import glob
 import subprocess
 import multiprocessing
-
+ 
 def run_cmd(cmd, description):
     print(f"\n [RUNNING] {description}")
     print(f"Command: {cmd}")
